@@ -1,0 +1,15 @@
+class LEDController:
+    def __init__(self, model, view):
+        self.model = model
+        self.view = view
+
+        self.view.boton_on.config(command=self.encender_led)
+        self.view.boton_off.config(command=self.apagar_led)
+
+    def encender_led(self):
+        self.model.encender()
+        self.view.actualizar_estado(self.model.get_estado())
+
+    def apagar_led(self):
+        self.model.apagar()
+        self.view.actualizar_estado(self.model.get_estado())
