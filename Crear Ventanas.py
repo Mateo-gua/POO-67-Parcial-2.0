@@ -1,0 +1,11 @@
+import tkinter as tk
+ventana = tk.Tk()
+ventana.geometry("800x200")
+ventana.title("Mi primera ventana")
+boton=tk.Button(ventana, text="Haz click aqui")
+boton.pack()
+marco=tk.Frame(ventana)
+marco.pack()
+boton1=tk.Button(marco, text="Boton 1")
+boton1.pack(side=tk.LEFT)
+ventana.mainloop()
