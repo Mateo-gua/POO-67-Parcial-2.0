@@ -1,0 +1,22 @@
+import RPi.GPIO as GPIO
+
+class LEDModel:
+    def __init__(self, pin=18):
+        self.pin = pin
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.pin, GPIO.OUT)
+        self.estado = False
+
+    def encender(self):
+        GPIO.output(self.pin, GPIO.HIGH)
+        self.estado = True
+
+    def apagar(self):
+        GPIO.output(self.pin, GPIO.LOW)
+        self.estado = False
+
+    def get_estado(self):
+        return self.estado
+
+    def limpiar(self):
+        GPIO.cleanup()
