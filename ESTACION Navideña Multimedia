@@ -1,0 +1,46 @@
+import threading
+import time
+
+class NavidadController:
+    def __init__(self, model, view):
+        self.model = model
+        self.view = view
+        self.corriendo = True
+
+        # Iniciar el hilo de monitoreo en segundo plano
+        hilo = threading.Thread(target=self.loop_principal, daemon=True)
+        hilo.start()
+
+    def loop_principal(self):
+        """Bucle infinito que revisa sensores y botones."""
+        while self.corriendo:
+            # 1. LÃ³gica del BotÃ³n
+            if self.model.leer_boton():
+                # AcciÃ³n: Encender todo
+                self.model.controlar_led(True)
+                self.model.reproducir_audio()
+                
+                # Actualizar Vista (usando after para thread-safety)
+                self.view.after(0, lambda: self.view.animar_estrella(True))
+                
+                # Esperar 5 segundos (simulando duraciÃ³n de evento)
+                time.sleep(5)
+                
+                # AcciÃ³n: Apagar todo
+                self.model.controlar_led(False)
+                self.view.after(0, lambda: self.view.animar_estrella(False))
+
+            # 2. LÃ³gica del Sensor DHT11
+            t, h = self.model.obtener_clima()
+            
+            # Actualizar la vista con los datos
+            # Usamos self.view.after porque Tkinter no es thread-safe
+            self.view.after(0, lambda: self.view.actualizar_etiqueta_clima(t, h))
+
+            # Pausa para no saturar la CPU
+            time.sleep(0.5)
+
+    def cerrar(self):
+        self.corriendo = False
+        self.model.limpiar_gpio()
+        
